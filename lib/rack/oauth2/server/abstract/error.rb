@@ -1,3 +1,5 @@
+require 'msgpack'
+
 module Rack
   module OAuth2
     module Server
@@ -27,8 +29,8 @@ module Rack
             response.status = status
             yield response if block_given?
             unless response.redirect?
-              response.header['Content-Type'] = 'application/json'
-              response.write MultiJson.dump(Util.compact_hash(protocol_params))
+              response.header['Content-Type'] = 'application/x-msgpack'
+              response.write Util.compact_hash(protocol_params).to_msgpack
             end
             response.finish
           end
